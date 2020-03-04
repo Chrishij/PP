@@ -133,9 +133,9 @@ void centerOfMass(quad_type* quad){
 		centerOfMass(quad->quadFour);
 
 		//divide by total mass?
-		quad->center.x = (quad->quadOne->mass*quad->quadOne->center.x + quad->quadTwo->mass*quad->quadTwo->center.x + quad->quadThree->mass*quad->quadThree->center.x + quad->quadFour->mass*quad->quadFour->center.x);
+		quad->center.x = (quad->quadOne->mass*(quad->quadOne->center.x) + quad->quadTwo->mass*(quad->quadTwo->center.x)+ quad->quadThree->mass*(quad->quadThree->center.x) + quad->quadFour->mass*(quad->quadFour->center.x))/(quad->mass);
 
-		quad->center.y = (quad->quadOne->mass*quad->quadOne->center.y + quad->quadTwo->mass*quad->quadTwo->center.y + quad->quadThree->mass*quad->quadThree->center.y + quad->quadFour->mass*quad->quadFour->center.y);
+		quad->center.y = (quad->quadOne->mass*(quad->quadOne->center.y) + quad->quadTwo->mass*(quad->quadTwo->center.y) + quad->quadThree->mass*(quad->quadThree->center.y) + quad->quadFour->mass*(quad->quadFour->center.y))/(quad->mass);
 	}
 }
 
@@ -208,7 +208,6 @@ void forceCal(quad_type* quad, star_t* star){
 		forceCal(quad->quadFour, star);	
 	}
 }
-
 
 
 void printQuad (quad_type* quad, int depth) {
