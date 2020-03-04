@@ -5,6 +5,7 @@
 #include "graphics.h"
 
 int N;
+int steps;
 double dt;
 double theta_max;
 double epsilon = 0.001;
@@ -241,17 +242,15 @@ int main(int argc, char *argv[]) {
 		printf("Not six input arguments!\n");
 	}
 	else {
+		N = atoi(argv[1]);
 		char* filename = argv[2];
-		N = atoi(argv[3]);
+		steps = atoi(argv[3]);
 		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
 
 		FILE* file1;
 		file1 = fopen(filename, "r");
-		//N = fsize(file1)/6/sizeof(double);
-		printf("Number is\n");
-		printf("%d\n", N);
 
 		star_t* starArray[N];
 
@@ -290,7 +289,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Main time loop
-		for (int k = 0; k < N; ++k)
+		for (int k = 0; k < steps; ++k)
 		{
 			quad_type* rootitoot = (quad_type*)malloc(sizeof(quad_type));
 			initQuad(rootitoot, 0.5, 0.5, 1, 1);
