@@ -250,6 +250,8 @@ int main(int argc, char *argv[]) {
 		FILE* file1;
 		file1 = fopen(filename, "r");
 		//N = fsize(file1)/6/sizeof(double);
+		printf("Number is\n");
+		printf("%d\n", N);
 
 		star_t* starArray[N];
 
