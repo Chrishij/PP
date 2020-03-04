@@ -17,11 +17,11 @@ echo "Run!"
 
 cd A4
 make
-time ./galsim 500 ../input_data/ellipse_N_00500.gal 200 0.00001 0.02 0
+time ./galsim 5000 ../input_data/ellipse_N_05000.gal 100 0.00001 0.21 0
 cd ..
 cd compare_gal_files
 gcc -o comp compare_gal_files.c -lm
-./comp 500 ../ref_output_data/ellipse_N_00500_after200steps.gal ../A4/result.gal
+./comp 5000 ../ref_output_data/ellipse_N_05000_after200steps.gal ../A4/result.gal
 
 # cd ..
 # cd A4
