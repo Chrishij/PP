@@ -122,6 +122,7 @@ void centerOfMass(quad_type* quad){
 		quad->center.x = ((quad->quadOne->mass*quad->quadOne->center.x + quad->quadTwo->mass*quad->quadTwo->center.x + quad->quadThree->mass*quad->quadThree->center.x + quad->quadFour->mass*quad->quadFour->center.x)/(quad->mass));
 
 		quad->center.y = ((quad->quadOne->mass*quad->quadOne->center.y + quad->quadTwo->mass*quad->quadTwo->center.y + quad->quadThree->mass*quad->quadThree->center.y + quad->quadFour->mass*quad->quadFour->center.y)/(quad->mass));
+
 	}
 }
 
