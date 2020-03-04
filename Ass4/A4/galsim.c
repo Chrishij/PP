@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-
 #include "graphics.h"
 
-//remove tat we ave w and  in struct quad
-//remove vectors for ods sake
+int N;
+double dt;
+double theta_max;
+double epsilon = 0.001;
+
+const float circleRadius=0.0025, circleColor=0;
+const int windowWidth=800;
 
 typedef struct vector {
 	double x;
@@ -37,19 +41,6 @@ typedef struct quad {
 	star_t* star;
 } quad_type;
 
-int N;
-double dt;
-double theta_max;
-double epsilon = 0.001;
-
-int fsize(FILE *fp){
-    int prev=ftell(fp);
-    fseek(fp, 0L, SEEK_END);
-    int sz=ftell(fp);
-    fseek(fp,prev,SEEK_SET); //go back to where we were
-    return sz;
-}
-
 void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel, double mass,double brightness) {
 	(*star) = (star_t*)malloc(sizeof(star_t));
 	(*star)->pos.x = xPos;
@@ -63,7 +54,6 @@ void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel
 }
 
 void initQuad (quad_type* quad, double x, double y, double w, double h){
-
 	quad->x = x;
 	quad->y = y;
 	quad->w = w;
@@ -74,7 +64,6 @@ void initQuad (quad_type* quad, double x, double y, double w, double h){
 	quad->quadThree = NULL;
 	quad->quadFour = NULL;
 	quad->star = NULL;
-
 }
 
 void addStar (quad_type* quad, star_t* star);
@@ -85,7 +74,6 @@ void subDivide (quad_type* quad) {
 	double yplusmargin = quad->y+(quad->h/4); 
 	double yminusmargin = quad->y-(quad->h/4);
 
-	//ndra detta så att vi inte mallocas för de kvadranterna som inte ar stjrnor
 	quad->quadOne = (quad_type*)malloc(sizeof(quad_type));
 	quad->quadTwo = (quad_type*)malloc(sizeof(quad_type));
 	quad->quadThree = (quad_type*)malloc(sizeof(quad_type));
@@ -96,7 +84,6 @@ void subDivide (quad_type* quad) {
 	initQuad(quad->quadThree, xminusmargin, yminusmargin, (quad->w/2), (quad->h/2));
 	initQuad(quad->quadFour, xplusmargin, yminusmargin, (quad->w/2), (quad->h/2));
 
-	//What if star is on the border, dun dun dun, done without thinking!
 	if(quad->star->pos.x >= quad->x) {
 		if (quad->star->pos.y >= quad->y) {
 			quad->quadOne->star = quad->star;
@@ -132,7 +119,6 @@ void centerOfMass(quad_type* quad){
 		centerOfMass(quad->quadThree);
 		centerOfMass(quad->quadFour);
 
-		//divide by total mass?
 		quad->center.x = ((quad->quadOne->mass*quad->quadOne->center.x + quad->quadTwo->mass*quad->quadTwo->center.x + quad->quadThree->mass*quad->quadThree->center.x + quad->quadFour->mass*quad->quadFour->center.x)/(quad->mass));
 
 		quad->center.y = ((quad->quadOne->mass*quad->quadOne->center.y + quad->quadTwo->mass*quad->quadTwo->center.y + quad->quadThree->mass*quad->quadThree->center.y + quad->quadFour->mass*quad->quadFour->center.y)/(quad->mass));
@@ -156,16 +142,7 @@ double quadMass(quad_type* quad){
 void forceCal(quad_type* quad, star_t* star){
 	double theta;
 	double G = 100.0/N;
-	
-	//distance to center of box
-	//accordin to wiki it is center of mass not of box
-	// vector_t distance;
-	// distance.x = star->pos.x - quad->x;
-	// distance.y = star->pos.y - quad->y;
 
-	// double norm = sqrt((distance.x)*(distance.x) + (distance.y)*(distance.y)) + epsilon;
-
-	//distance to center of mass of quad
 	vector_t distance_center;
 	distance_center.x = star->pos.x - quad->center.x;
 	distance_center.y = star->pos.y - quad->center.y;
@@ -189,7 +166,6 @@ void forceCal(quad_type* quad, star_t* star){
 		forceCal(quad->quadFour, star);	
 	}
 }
-
 
 void printQuad (quad_type* quad, int depth) {
 	if (quad->star)
@@ -237,9 +213,6 @@ void addStar (quad_type* quad, star_t* star) {
 	}
 }
 
-const float circleRadius=0.0025, circleColor=0;
-const int windowWidth=800;
-
 void drawQuad(quad_type* quad){
 	DrawRectangle((float)((quad->x)-(quad->w/2)), ((quad->y)-(quad->h/2)), 1, 1, (float)(quad->w), (float)(quad->h), 0.5);
 	if ((quad->quadOne)){
@@ -262,50 +235,23 @@ void clearQuad(quad_type* quad){
 	quad = NULL;
 }
 
-
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-//-----------------
-
-
-
 int main(int argc, char *argv[]) {
 	if (argc != 7)
 	{
 		printf("Not six input arguments!\n");
 	}
 	else {
-
 		char* filename = argv[2];
-		int nsteps = atoi(argv[3]);
-		double delta_t = atof(argv[4]);
+		N = atoi(argv[3]);
+		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
 
 		FILE* file1;
 		file1 = fopen(filename, "r");
-		N = fsize(file1)/6/sizeof(double);
-		star_t* starArray[N];
+		//N = fsize(file1)/6/sizeof(double);
 
-		dt = delta_t;
+		star_t* starArray[N];
 
 		size_t mem_block_size = 1;
 		double pos_x;
@@ -341,10 +287,8 @@ int main(int argc, char *argv[]) {
 			SetCAxes(0,1);
 		}
 
-
-		//Calculate forces
-		//Time loop
-		for (int k = 0; k < nsteps; ++k)
+		// Main time loop
+		for (int k = 0; k < N; ++k)
 		{
 			quad_type* rootitoot = (quad_type*)malloc(sizeof(quad_type));
 			initQuad(rootitoot, 0.5, 0.5, 1, 1);
@@ -358,39 +302,12 @@ int main(int argc, char *argv[]) {
 		 	centerOfMass(rootitoot);
 
 		    for (int i = 0; i < N; ++i){
-				// vector_t distance;
-				// double G = 100.0/N;
-				// double norm;
-				// double con;
-				// double epsilon = 0.001;
-
 				forceCal(rootitoot, starArray[i]);
-
-				// for (int j = i; j < N; ++j)
-				// {
-				// 	distance.x = starArray[i]->pos.x - starArray[j]->pos.x;
-				// 	distance.y = starArray[i]->pos.y - starArray[j]->pos.y;
-				// 	norm = sqrt((distance.x)*(distance.x) + (distance.y)*(distance.y)) + epsilon;
-				// 	con = (-G*(starArray[i]->mass)*(starArray[j]->mass))/((norm)*(norm)*(norm));
-
-				// 	starArray[i]->F.x += distance.x*con;
-				// 	starArray[i]->F.y += distance.y*con;
-
-				// 	starArray[j]->F.x += -distance.x*con;
-				// 	starArray[j]->F.y += -distance.y*con;
-
-
-				// }
 		    }
 
 		    for (int i = 0; i < N; ++i)
 		    {
 				vector_t acc;
-
-				//printf("%lf\n", starArray[i]->F.x);
-
-				// acc.x = starArray[i]->F.x/starArray[i]->mass;
-				// acc.y = starArray[i]->F.y/starArray[i]->mass;
 
 				acc.x = starArray[i]->F.x;
 				acc.y = starArray[i]->F.y;				
