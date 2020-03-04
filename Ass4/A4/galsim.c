@@ -133,19 +133,20 @@ void centerOfMass(quad_type* quad){
 		centerOfMass(quad->quadFour);
 
 		//divide by total mass?
-		quad->center.x = (quad->quadOne->mass*(quad->quadOne->center.x) + quad->quadTwo->mass*(quad->quadTwo->center.x)+ quad->quadThree->mass*(quad->quadThree->center.x) + quad->quadFour->mass*(quad->quadFour->center.x))/(quad->mass);
+		quad->center.x = ((quad->quadOne->mass*quad->quadOne->center.x + quad->quadTwo->mass*quad->quadTwo->center.x + quad->quadThree->mass*quad->quadThree->center.x + quad->quadFour->mass*quad->quadFour->center.x)/(quad->mass));
 
-		quad->center.y = (quad->quadOne->mass*(quad->quadOne->center.y) + quad->quadTwo->mass*(quad->quadTwo->center.y) + quad->quadThree->mass*(quad->quadThree->center.y) + quad->quadFour->mass*(quad->quadFour->center.y))/(quad->mass);
+		quad->center.y = ((quad->quadOne->mass*quad->quadOne->center.y + quad->quadTwo->mass*quad->quadTwo->center.y + quad->quadThree->mass*quad->quadThree->center.y + quad->quadFour->mass*quad->quadFour->center.y)/(quad->mass));
+
 	}
 }
 
 double quadMass(quad_type* quad){
 	double mass = 0;
 	if(quad->quadOne){
-		mass+=quadMass(quad->quadOne)+quadMass(quad->quadTwo)+quadMass(quad->quadThree)+quadMass(quad->quadFour);
+		mass=quadMass(quad->quadOne)+quadMass(quad->quadTwo)+quadMass(quad->quadThree)+quadMass(quad->quadFour);
 	}
 	if(quad->star){
-		mass+=quad->star->mass;
+		mass=quad->star->mass;
 	}
 	quad->mass = mass;
 	return mass;
@@ -158,48 +159,28 @@ void forceCal(quad_type* quad, star_t* star){
 	
 	//distance to center of box
 	//accordin to wiki it is center of mass not of box
-	vector_t distance;
-	distance.x = star->pos.x - quad->x;
-	distance.y = star->pos.y - quad->y;
+	// vector_t distance;
+	// distance.x = star->pos.x - quad->x;
+	// distance.y = star->pos.y - quad->y;
 
-	double norm = sqrt((distance.x)*(distance.x) + (distance.y)*(distance.y)) + epsilon;
-	theta = quad->w/norm; 
+	// double norm = sqrt((distance.x)*(distance.x) + (distance.y)*(distance.y)) + epsilon;
 
 	//distance to center of mass of quad
 	vector_t distance_center;
 	distance_center.x = star->pos.x - quad->center.x;
 	distance_center.y = star->pos.y - quad->center.y;
 
-	double norm2 = sqrt((distance_center.x)*(distance_center.x) + (distance_center.y)*(distance_center.y)) + epsilon;	
-
-			// distance.x = starArray[i]->pos.x - starArray[j]->pos.x;
-			// distance.y = starArray[i]->pos.y - starArray[j]->pos.y;
-			// norm = sqrt((distance.x)*(distance.x) + (distance.y)*(distance.y)) + epsilon;
-			// con = (-G*(starArray[i]->mass)*(starArray[j]->mass))/((norm)*(norm)*(norm));
-
-			// starArray[i]->F.x += distance.x*con;
-			// starArray[i]->F.y += distance.y*con;
-
-			// starArray[j]->F.x += -distance.x*con;
-			// starArray[j]->F.y += -distance.y*con;
+	double norm2 = sqrt((distance_center.x)*(distance_center.x) + (distance_center.y)*(distance_center.y)) + epsilon;
+	
+	theta = quad->w/norm2;
 
 	if(quad->star){
-		// printf("%lf\n", distance_center.x*(-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2)));
-
-		// star->F.x += distance_center.x*(-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2));
-		// star->F.y += distance_center.y*(-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2));
-
 		star->F.x += distance_center.x*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
 		star->F.y += distance_center.y*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
 	}
 	else if(theta <= theta_max){
-		// printf("%lf\n", distance_center.x*(-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2)));
-
-		// star->F.x += (-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2));
-		// star->F.y += (-G*(star->mass)*(quad->mass))/((norm2)*(norm2)*(norm2));
-
-		star->F.x += (-G*(quad->mass))/((norm2)*(norm2)*(norm2));
-		star->F.y += (-G*(quad->mass))/((norm2)*(norm2)*(norm2));
+		star->F.x += distance_center.x*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
+		star->F.y += distance_center.y*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
 	}
 	else if(quad->quadOne){
 		forceCal(quad->quadOne, star);
