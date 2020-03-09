@@ -8,8 +8,9 @@ int N;
 int steps;
 double dt;
 double theta_max;
-const double epsilon = 0.001;
+double G;
 
+const double epsilon = 0.001;
 const float circleRadius=0.0025, circleColor=0;
 const int windowWidth=800;
 const float L=1;
@@ -132,7 +133,6 @@ double quadMass(quad_type* quad){
 
 void forceCal(quad_type* quad, star_t* star){
 	double theta;
-	double G = 100.0/N;
 
 	double distance_center_x=0;
 	double distance_center_y=0;
@@ -240,6 +240,7 @@ int main(int argc, char *argv[]) {
 		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
+		G = 100.0/N;
 
 		FILE* file1;
 		file1 = fopen(filename, "r");
