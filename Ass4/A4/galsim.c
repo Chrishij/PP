@@ -56,8 +56,6 @@ void initQuad (quad_type* quad, double x, double y, double w){
 	quad->x = x;
 	quad->y = y;
 	quad->w = w;
-
-
 	quad->quadOne = NULL;
 	quad->quadTwo = NULL;
 	quad->quadThree = NULL;
@@ -256,26 +254,19 @@ int main(int argc, char *argv[]) {
 		star_t* starArray[N];
 
 		size_t mem_block_size = 1;
-		double pos_x;
-		double pos_y;
-		double vel_x;
-		double vel_y;
-		double mass;
-		double brightness;
-
 		double temp;
 
 		//Read input file
 		for (int i = 0; i < N; ++i)								
 		{
-			temp = fread(&pos_x, sizeof(double), mem_block_size, file1);
-			temp = fread(&pos_y, sizeof(double), mem_block_size, file1);
-			temp = fread(&mass, sizeof(double), mem_block_size, file1);
-			temp = fread(&vel_x, sizeof(double), mem_block_size, file1);
-			temp = fread(&vel_y, sizeof(double), mem_block_size, file1);
-			temp = fread(&brightness, sizeof(double), mem_block_size, file1);
+			(starArray[i]) = (star_t*)malloc(sizeof(star_t));
+			temp = fread(&(starArray[i]->pos_x), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->pos_y), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->mass), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->vel_x), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->vel_y), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->brightness), sizeof(double), mem_block_size, file1);
 			temp = temp+1;
-			initStar(&(starArray[i]), pos_x, pos_y, vel_x, vel_y, mass, brightness);
 		}
 		
 		fclose(file1);

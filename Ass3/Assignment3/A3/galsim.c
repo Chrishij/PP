@@ -5,17 +5,11 @@
 #include "graphics.h"
 
 //Constants
-int N=500;
-double dt=0.00001;
+int N;
+double dt;
 
 const float circleRadius=0.0025, circleColor=0;
 const int windowWidth=800;
-
-
-// typedef struct vector {
-// 	double x;
-// 	double y;
-// } vector_t;
 
 typedef struct star {
 	double pos_x;
@@ -45,6 +39,8 @@ void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel
 	(*star)->vel_y = yVel;
 	(*star)->mass = mass;
 	(*star)->brightness = brightness;
+	(*star)->F_x = 0;
+	(*star)->F_y = 0;
 }
 
 int main(int argc, char *argv[]) {
