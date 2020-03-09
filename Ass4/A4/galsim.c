@@ -4,8 +4,8 @@
 #include <string.h>
 #include "graphics.h"
 
-int N;
-int steps;
+// const int* N;
+// int steps;
 double dt;
 double theta_max;
 double G;
@@ -231,13 +231,13 @@ int main(int argc, char *argv[]) {
 		printf("Not six input arguments!\n");
 	}
 	else {
-		N = atoi(argv[1]);
+		const int N = atoi(argv[1]);
 		char* filename = argv[2];
-		steps = atoi(argv[3]);
+		const int steps = atoi(argv[3]);
 		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
-		G = 100.0/N;
+		G = 100.0/(N);
 
 		FILE* file1;
 		file1 = fopen(filename, "r");
