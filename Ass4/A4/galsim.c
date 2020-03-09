@@ -24,20 +24,23 @@ typedef struct star {
 	double F_y;
 	double mass;
 	double brightness;
+
 } star_t;
 
 typedef struct quad {
-	struct quad* quadOne;
-	struct quad* quadTwo;
-	struct quad* quadThree;
-	struct quad* quadFour;
-	star_t* star;	
 	double x;
 	double y;
 	double w;
 	double mass;
 	double center_x;
 	double center_y;
+
+	struct quad* quadOne;
+	struct quad* quadTwo;
+	struct quad* quadThree;
+	struct quad* quadFour;
+	
+	star_t* star;
 } quad_type;
 
 void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel, double mass,double brightness) {
@@ -309,9 +312,14 @@ int main(int argc, char *argv[]) {
 
 		    for (int i = 0; i < N; ++i)
 		    {
+				double acc_x=0;
+				double acc_y=0;
 
-				starArray[i]->vel_x += starArray[i]->F_x*dt;
-				starArray[i]->vel_y += starArray[i]->F_y*dt;
+				acc_x = starArray[i]->F_x;
+				acc_y = starArray[i]->F_y;				
+
+				starArray[i]->vel_x += acc_x*dt;
+				starArray[i]->vel_y += acc_y*dt;
 
 				starArray[i]->pos_x += starArray[i]->vel_x *dt;
 				starArray[i]->pos_y += starArray[i]->vel_y *dt;
