@@ -14,6 +14,9 @@ const double epsilon = 0.001;
 const float circleRadius=0.0025, circleColor=0;
 const int windowWidth=800;
 
+const float L=1;
+const float W=1;
+
 
 typedef struct star {
 	double pos_x;
@@ -39,18 +42,6 @@ typedef struct quad {
 	double center_x;
 	double center_y;
 } quad_type;
-
-void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel, double mass,double brightness) {
-	(*star) = (star_t*)malloc(sizeof(star_t));
-	(*star)->pos_x = xPos;
-	(*star)->pos_y = yPos;
-	(*star)->vel_x = xVel;
-	(*star)->vel_y = yVel;
-	(*star)->mass = mass;
-	(*star)->brightness = brightness;
-	(*star)->F_x = 0;
-	(*star)->F_y = 0;
-}
 
 void initQuad (quad_type* quad, double x, double y, double w){
 	quad->x = x;
@@ -267,12 +258,13 @@ int main(int argc, char *argv[]) {
 			temp = fread(&(starArray[i]->vel_y), sizeof(double), mem_block_size, file1);
 			temp = fread(&(starArray[i]->brightness), sizeof(double), mem_block_size, file1);
 			temp = temp+1;
+
+			starArray[i]->F_x = 0;
+			starArray[i]->F_y = 0;
 		}
 		
 		fclose(file1);
 
-	 	float L=1;
-	 	float W=1;
 
 	    if (graphics == 1)
 	    {
