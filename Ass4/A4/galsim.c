@@ -12,6 +12,8 @@ const double epsilon = 0.001;
 
 const float circleRadius=0.0025, circleColor=0;
 const int windowWidth=800;
+const float L=1;
+const float W=1;
 
 
 typedef struct star {
@@ -42,23 +44,10 @@ typedef struct quad {
 	star_t* star;
 } quad_type;
 
-void initStar (star_t** star, double xPos, double yPos, double xVel, double yVel, double mass,double brightness) {
-	(*star) = (star_t*)malloc(sizeof(star_t));
-	(*star)->pos_x = xPos;
-	(*star)->pos_y = yPos;
-	(*star)->vel_x = xVel;
-	(*star)->vel_y = yVel;
-	(*star)->mass = mass;
-	(*star)->brightness = brightness;
-	(*star)->F_x = 0;
-	(*star)->F_y = 0;
-}
-
 void initQuad (quad_type* quad, double x, double y, double w){
 	quad->x = x;
 	quad->y = y;
 	quad->w = w;
-
 
 	quad->quadOne = NULL;
 	quad->quadTwo = NULL;
@@ -258,32 +247,24 @@ int main(int argc, char *argv[]) {
 		star_t* starArray[N];
 
 		size_t mem_block_size = 1;
-		double pos_x;
-		double pos_y;
-		double vel_x;
-		double vel_y;
-		double mass;
-		double brightness;
-
 		double temp;
 
 		//Read input file
 		for (int i = 0; i < N; ++i)								
 		{
-			temp = fread(&pos_x, sizeof(double), mem_block_size, file1);
-			temp = fread(&pos_y, sizeof(double), mem_block_size, file1);
-			temp = fread(&mass, sizeof(double), mem_block_size, file1);
-			temp = fread(&vel_x, sizeof(double), mem_block_size, file1);
-			temp = fread(&vel_y, sizeof(double), mem_block_size, file1);
-			temp = fread(&brightness, sizeof(double), mem_block_size, file1);
+			(starArray[i]) = (star_t*)malloc(sizeof(star_t));
+
+			temp = fread(&(starArray[i]->pos_x), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->pos_y), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->mass), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->vel_x), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->vel_y), sizeof(double), mem_block_size, file1);
+			temp = fread(&(starArray[i]->brightness), sizeof(double), mem_block_size, file1);
 			temp = temp+1;
-			initStar(&(starArray[i]), pos_x, pos_y, vel_x, vel_y, mass, brightness);
 		}
-		
 		fclose(file1);
 
-	 	float L=1;
-	 	float W=1;
+
 
 	    if (graphics == 1)
 	    {
