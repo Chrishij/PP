@@ -1,4 +1,5 @@
-CFLAGS=-Wall -Ofast
+#CFLAGS=-Wall -O0 -fopt-info-vec-all
+CFLAGS=-Wall -O3 -fopt-info-vec
 INCLUDES=-I/opt/X11/include
 LDFLAGS=-L/opt/X11/lib -lX11 -lm
 
