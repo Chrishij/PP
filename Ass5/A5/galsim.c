@@ -18,12 +18,12 @@ const int windowWidth=800;
 const float L=1;
 const float W=1;
 
-struct thread_data {
+typedef struct thread_data {
 	int startIndex;
 	int numOfIter;
 	struct quad* quad;
 	struct star* array;
-};
+} thread_d;
 
 typedef struct star {
 	double pos_x;
@@ -241,6 +241,7 @@ void *forceCaller(void* threadargs){
 	{
 		forceCal((my_data->quad), &(my_data->array)[i]);
 	}
+	pthread_exit(NULL); 
 }
 
 int main(int argc, char *argv[]) {
@@ -309,25 +310,25 @@ int main(int argc, char *argv[]) {
 			pthread_t ptid3;
 			pthread_t ptid4;
 
-			struct thread_data* threadargs;
+			struct thread_data* threadargs = (thread_d*)malloc(sizeof(thread_d));
 			threadargs->array = (star_t*)malloc(sizeof(star_t)*N);
 			threadargs->startIndex = 0;
 			threadargs->numOfIter = N/4;
 			threadargs->quad = rootitoot;
 
-			struct thread_data* threadargs2;
+			struct thread_data* threadargs2 = (thread_d*)malloc(sizeof(thread_d));
 			threadargs2->array = (star_t*)malloc(sizeof(star_t)*N);
 			threadargs2->startIndex = 25;
 			threadargs2->numOfIter = N/4;
 			threadargs2->quad = rootitoot;
 
-			struct thread_data* threadargs3;
+			struct thread_data* threadargs3 = (thread_d*)malloc(sizeof(thread_d));
 			threadargs3->array = (star_t*)malloc(sizeof(star_t)*N);
 			threadargs3->startIndex = 50;
 			threadargs3->numOfIter = N/4;
 			threadargs3->quad = rootitoot;
 
-			struct thread_data* threadargs4; 
+			struct thread_data* threadargs4 = (thread_d*)malloc(sizeof(thread_d)); 
 			threadargs4->array = (star_t*)malloc(sizeof(star_t)*N);
 			threadargs4->startIndex = 75;
 			threadargs4->numOfIter = N/4;
@@ -340,9 +341,7 @@ int main(int argc, char *argv[]) {
 				threadargs2->array[i] = *starArray[i];
 				threadargs3->array[i] = *starArray[i];
 				threadargs4->array[i] = *starArray[i];
-			}	
-
-			printf("hejsan\n");
+			}
 
 			pthread_create(&ptid, NULL, &forceCaller, (void* ) threadargs);
 			pthread_create(&ptid2, NULL, &forceCaller, (void* ) threadargs2);
