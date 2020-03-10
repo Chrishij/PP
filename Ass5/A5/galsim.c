@@ -237,9 +237,9 @@ void *forceCaller(void* threadargs){
 	my_data = (struct thread_data*) threadargs;
 	int startIndex = my_data->startIndex;
 	int numOfIter = my_data->numOfIter;
-	for (int i = startIndex; i < numOfIter; ++i)
+	for (int i = startIndex; i < (startIndex+numOfIter); ++i)
 	{
-		forceCal((my_data->quad), &(my_data->array)[i]);
+		forceCal((my_data->quad), &(my_data->array[i]));
 	}
 	pthread_exit(NULL); 
 }
@@ -318,19 +318,19 @@ int main(int argc, char *argv[]) {
 
 			struct thread_data* threadargs2 = (thread_d*)malloc(sizeof(thread_d));
 			threadargs2->array = (star_t*)malloc(sizeof(star_t)*N);
-			threadargs2->startIndex = 25;
+			threadargs2->startIndex = N/4;
 			threadargs2->numOfIter = N/4;
 			threadargs2->quad = rootitoot;
 
 			struct thread_data* threadargs3 = (thread_d*)malloc(sizeof(thread_d));
 			threadargs3->array = (star_t*)malloc(sizeof(star_t)*N);
-			threadargs3->startIndex = 50;
+			threadargs3->startIndex = N/2;
 			threadargs3->numOfIter = N/4;
 			threadargs3->quad = rootitoot;
 
 			struct thread_data* threadargs4 = (thread_d*)malloc(sizeof(thread_d)); 
 			threadargs4->array = (star_t*)malloc(sizeof(star_t)*N);
-			threadargs4->startIndex = 75;
+			threadargs4->startIndex = (N/4)*3;
 			threadargs4->numOfIter = N/4;
 			threadargs4->quad = rootitoot;
 
@@ -352,10 +352,8 @@ int main(int argc, char *argv[]) {
 			pthread_join(ptid2, NULL); 
 			pthread_join(ptid3, NULL); 
 			pthread_join(ptid4, NULL);
-
 		    for (int i = 0; i < N; ++i)
 		    {
-
 				starArray[i]->vel_x += starArray[i]->F_x*dt;
 				starArray[i]->vel_y += starArray[i]->F_y*dt;
 
