@@ -18,6 +18,12 @@ const int windowWidth=800;
 const float L=1;
 const float W=1;
 
+struct thread_data {
+	int startIndex;
+	int numOfIter;
+	struct quad* quad;
+	struct star* array;
+};
 
 typedef struct star {
 	double pos_x;
@@ -226,6 +232,17 @@ void clearQuad(quad_type* quad){
 	quad = NULL;
 }
 
+void *forceCaller(void* threadargs){
+	struct thread_data *my_data;
+	my_data = (struct thread_data*) threadargs;
+	int startIndex = my_data->startIndex;
+	int numOfIter = my_data->numOfIter;
+	for (int i = startIndex; i < numOfIter; ++i)
+	{
+		forceCal((my_data->quad), &(my_data->array)[i]);
+	}
+}
+
 int main(int argc, char *argv[]) {
 	if (argc != 7)
 	{
@@ -287,9 +304,55 @@ int main(int argc, char *argv[]) {
 		 	quadMass(rootitoot);
 		 	centerOfMass(rootitoot);
 
-		    for (int i = 0; i < N; ++i){
-				forceCal(rootitoot, starArray[i]);
-		    }
+			pthread_t ptid;
+			pthread_t ptid2;
+			pthread_t ptid3;
+			pthread_t ptid4;
+
+			struct thread_data* threadargs;
+			threadargs->array = (star_t*)malloc(sizeof(star_t)*N);
+			threadargs->startIndex = 0;
+			threadargs->numOfIter = N/4;
+			threadargs->quad = rootitoot;
+
+			struct thread_data* threadargs2;
+			threadargs2->array = (star_t*)malloc(sizeof(star_t)*N);
+			threadargs2->startIndex = 25;
+			threadargs2->numOfIter = N/4;
+			threadargs2->quad = rootitoot;
+
+			struct thread_data* threadargs3;
+			threadargs3->array = (star_t*)malloc(sizeof(star_t)*N);
+			threadargs3->startIndex = 50;
+			threadargs3->numOfIter = N/4;
+			threadargs3->quad = rootitoot;
+
+			struct thread_data* threadargs4; 
+			threadargs4->array = (star_t*)malloc(sizeof(star_t)*N);
+			threadargs4->startIndex = 75;
+			threadargs4->numOfIter = N/4;
+			threadargs4->quad = rootitoot;
+
+
+			for (int i = 0; i < N; ++i)
+			{
+				threadargs->array[i] = *starArray[i];
+				threadargs2->array[i] = *starArray[i];
+				threadargs3->array[i] = *starArray[i];
+				threadargs4->array[i] = *starArray[i];
+			}	
+
+			printf("hejsan\n");
+
+			pthread_create(&ptid, NULL, &forceCaller, (void* ) threadargs);
+			pthread_create(&ptid2, NULL, &forceCaller, (void* ) threadargs2);
+			pthread_create(&ptid3, NULL, &forceCaller, (void* ) threadargs3);
+			pthread_create(&ptid4, NULL, &forceCaller, (void* ) threadargs4);
+
+			pthread_join(ptid, NULL); 
+			pthread_join(ptid2, NULL); 
+			pthread_join(ptid3, NULL); 
+			pthread_join(ptid4, NULL);
 
 		    for (int i = 0; i < N; ++i)
 		    {
