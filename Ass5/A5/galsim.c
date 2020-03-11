@@ -312,7 +312,7 @@ int main(int argc, char *argv[]) {
 			int lastStepSize = stepSize+(N-stepSize*n_threads);
 			printf("%d\n", lastStepSize);
 
-			for (int i = 0; i < n_threads; ++i)
+			for (int i = 0; i < (n_threads-1); ++i)
 			{
 				threadargs[i] = (thread_d*)malloc(sizeof(thread_d));
 				threadargs[i]->array = (star_t**) malloc(sizeof(star_t*)*(N));
@@ -321,11 +321,11 @@ int main(int argc, char *argv[]) {
 				threadargs[i]->quad = rootitoot;
 			}
 
-			threadargs[n_threads] = (thread_d*)malloc(sizeof(thread_d));
-			threadargs[n_threads]->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			threadargs[n_threads]->startIndex = N-lastStepSize;
-			threadargs[n_threads]->numOfIter = lastStepSize;
-			threadargs[n_threads]->quad = rootitoot;
+			threadargs[n_threads-1] = (thread_d*)malloc(sizeof(thread_d));
+			threadargs[n_threads-1]->array = (star_t**) malloc(sizeof(star_t*)*(N));
+			threadargs[n_threads-1]->startIndex = N-lastStepSize;
+			threadargs[n_threads-1]->numOfIter = lastStepSize;
+			threadargs[n_threads-1]->quad = rootitoot;
 
 			for (int i = 0; i < N; ++i)
 			{

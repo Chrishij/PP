@@ -38,7 +38,8 @@ echo "Run!"
 
 cd A5
 make
-time ./galsim 2000 ../input_data/ellipse_N_02000.gal 200 0.00001 0.21 0 3
+# time ./galsim 2000 ../input_data/ellipse_N_02000.gal 200 0.00001 0.21 1 10
+time ./galsim 4 ../input_data/sun_and_planets_N_4.gal 200000 0.00001 0.21 1 10
 #valgrind --tool=memcheck ./galsim 2000 ../input_data/ellipse_N_00500.gal 200 0.00001 0.21 0
 cd ..
 cd compare_gal_files
