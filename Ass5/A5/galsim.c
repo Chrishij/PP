@@ -5,8 +5,6 @@
 #include <pthread.h>
 #include "graphics.h"
 
-// const int* N;
-// int steps;
 double dt;
 double theta_max;
 double G;
@@ -118,7 +116,6 @@ void centerOfMass(quad_type* quad){
 		quad->center_x = ((quad->quadOne->mass*quad->quadOne->center_x + quad->quadTwo->mass*quad->quadTwo->center_x + quad->quadThree->mass*quad->quadThree->center_x + quad->quadFour->mass*quad->quadFour->center_x)/(quad->mass));
 
 		quad->center_y = ((quad->quadOne->mass*quad->quadOne->center_y + quad->quadTwo->mass*quad->quadTwo->center_y + quad->quadThree->mass*quad->quadThree->center_y + quad->quadFour->mass*quad->quadFour->center_y)/(quad->mass));
-
 	}
 }
 
@@ -310,42 +307,25 @@ int main(int argc, char *argv[]) {
 
 			pthread_t ptid[n_threads];
 			struct thread_data* threadargs[n_threads];
-			// pthread_t ptid2;
-			// pthread_t ptid3;
-			// pthread_t ptid4;
+
+			int stepSize = N/n_threads;
+			int lastStepSize = stepSize+(N-stepSize*n_threads);
+			printf("%d\n", lastStepSize);
 
 			for (int i = 0; i < n_threads; ++i)
 			{
 				threadargs[i] = (thread_d*)malloc(sizeof(thread_d));
 				threadargs[i]->array = (star_t**) malloc(sizeof(star_t*)*(N));
-				threadargs[i]->startIndex = (N/n_threads)*i;
-				threadargs[i]->numOfIter = N/n_threads;
+				threadargs[i]->startIndex = stepSize*i;
+				threadargs[i]->numOfIter = stepSize;
 				threadargs[i]->quad = rootitoot;
 			}
 
-			// struct thread_data* threadargs = (thread_d*)malloc(sizeof(thread_d));
-			// threadargs->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			// threadargs->startIndex = 0;
-			// threadargs->numOfIter = N/4;
-			// threadargs->quad = rootitoot;
-
-			// struct thread_data* threadargs2 = (thread_d*)malloc(sizeof(thread_d));
-			// threadargs2->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			// threadargs2->startIndex = N/4;
-			// threadargs2->numOfIter = N/4;
-			// threadargs2->quad = rootitoot;
-
-			// struct thread_data* threadargs3 = (thread_d*)malloc(sizeof(thread_d));
-			// threadargs3->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			// threadargs3->startIndex = N/2;
-			// threadargs3->numOfIter = N/4;
-			// threadargs3->quad = rootitoot;
-
-			// struct thread_data* threadargs4 = (thread_d*)malloc(sizeof(thread_d)); 
-			// threadargs4->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			// threadargs4->startIndex = (N/4)*3;
-			// threadargs4->numOfIter = N/4;
-			// threadargs4->quad = rootitoot;
+			threadargs[n_threads] = (thread_d*)malloc(sizeof(thread_d));
+			threadargs[n_threads]->array = (star_t**) malloc(sizeof(star_t*)*(N));
+			threadargs[n_threads]->startIndex = N-lastStepSize;
+			threadargs[n_threads]->numOfIter = lastStepSize;
+			threadargs[n_threads]->quad = rootitoot;
 
 			for (int i = 0; i < N; ++i)
 			{
@@ -364,14 +344,6 @@ int main(int argc, char *argv[]) {
 			{
 				pthread_join(ptid[i], NULL); 
 			}
-			
-			// pthread_create(&ptid2, NULL, &forceCaller, (void* ) threadargs2);
-			// pthread_create(&ptid3, NULL, &forceCaller, (void* ) threadargs3);
-			// pthread_create(&ptid4, NULL, &forceCaller, (void* ) threadargs4);
-
-			// pthread_join(ptid2, NULL); 
-			// pthread_join(ptid3, NULL); 
-			// pthread_join(ptid4, NULL);
 
 		    for (int i = 0; i < N; ++i)
 		    {
@@ -418,6 +390,5 @@ int main(int argc, char *argv[]) {
 		{
 			free(starArray[i]);
 		}
-			
 	}
 }
