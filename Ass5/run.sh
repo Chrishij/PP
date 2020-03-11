@@ -28,23 +28,23 @@ echo "Run!"
 # cd ..
 
 
-# ---
-cd A5
-make
-pprof --pdf ./galsim 500 ./galsim 500 ../input_data/ellipse_N_00500.gal 200 0.00001 0.0 0
- galsim.prof > out.pdf
-
-# #----
-
+# # ---
 # cd A5
 # make
-# time ./galsim 2000 ../input_data/ellipse_N_02000.gal 200 0.00001 0.21 0
-# #valgrind --tool=memcheck ./galsim 2000 ../input_data/ellipse_N_00500.gal 200 0.00001 0.21 0
-# cd ..
-# cd compare_gal_files
-# gcc -o comp compare_gal_files.c -lm
-# ./comp 2000 ../ref_output_data/ellipse_N_02000_after200steps.gal ../A5/result.gal
-# cd ..
+# pprof --pdf ./galsim 500 ./galsim 500 ../input_data/ellipse_N_00500.gal 200 0.00001 0.0 0
+#  galsim.prof > out.pdf
+
+# # #----
+
+cd A5
+make
+time ./galsim 2000 ../input_data/ellipse_N_02000.gal 200 0.00001 0.21 0
+#valgrind --tool=memcheck ./galsim 2000 ../input_data/ellipse_N_00500.gal 200 0.00001 0.21 0
+cd ..
+cd compare_gal_files
+gcc -o comp compare_gal_files.c -lm
+./comp 2000 ../ref_output_data/ellipse_N_02000_after200steps.gal ../A5/result.gal
+cd ..
 
 # cd A4
 # make

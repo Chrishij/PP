@@ -47,7 +47,7 @@ typedef struct thread_data {
 	int startIndex;
 	int numOfIter;
 	quad_type* quad;
-	star_t* array;
+	star_t** array;
 } thread_d;
 
 void initQuad (quad_type* quad, double x, double y, double w){
@@ -152,12 +152,10 @@ void forceCal(quad_type* quad, star_t* star){
 	if(quad->star){
 		star->F_x += distance_center_x*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
 		star->F_y += distance_center_y*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
-		printf("update F\n");
 	}
 	else if(theta <= theta_max){
 		star->F_x += distance_center_x*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
 		star->F_y += distance_center_y*(-G*(quad->mass))/((norm2)*(norm2)*(norm2));
-		printf("update F 2\n");
 	}
 	else if(quad->quadOne){
 		forceCal(quad->quadOne, star);
@@ -315,25 +313,25 @@ int main(int argc, char *argv[]) {
 			pthread_t ptid4;
 
 			struct thread_data* threadargs = (thread_d*)malloc(sizeof(thread_d));
-			threadargs->array = (star_t*) malloc(sizeof(star_t)*(N));
+			threadargs->array = (star_t**) malloc(sizeof(star_t*)*(N));
 			threadargs->startIndex = 0;
 			threadargs->numOfIter = N/4;
 			threadargs->quad = rootitoot;
 
 			struct thread_data* threadargs2 = (thread_d*)malloc(sizeof(thread_d));
-			threadargs2->array = (star_t*) malloc(sizeof(star_t)*(N));
+			threadargs2->array = (star_t**) malloc(sizeof(star_t*)*(N));
 			threadargs2->startIndex = N/4;
 			threadargs2->numOfIter = N/4;
 			threadargs2->quad = rootitoot;
 
 			struct thread_data* threadargs3 = (thread_d*)malloc(sizeof(thread_d));
-			threadargs3->array = (star_t*) malloc(sizeof(star_t)*(N));
+			threadargs3->array = (star_t**) malloc(sizeof(star_t*)*(N));
 			threadargs3->startIndex = N/2;
 			threadargs3->numOfIter = N/4;
 			threadargs3->quad = rootitoot;
 
 			struct thread_data* threadargs4 = (thread_d*)malloc(sizeof(thread_d)); 
-			threadargs4->array = (star_t*) malloc(sizeof(star_t)*(N));
+			threadargs4->array = (star_t**) malloc(sizeof(star_t*)*(N));
 			threadargs4->startIndex = (N/4)*3;
 			threadargs4->numOfIter = N/4;
 			threadargs4->quad = rootitoot;
