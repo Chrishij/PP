@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <omp.h>
 #include "graphics.h"
 
 // const int* N;
@@ -226,9 +227,9 @@ void clearQuad(quad_type* quad){
 }
 
 int main(int argc, char *argv[]) {
-	if (argc != 7)
+	if (argc != 8)
 	{
-		printf("Not six input arguments!\n");
+		printf("Not seven input arguments!\n");
 	}
 	else {
 		const int N = atoi(argv[1]);
@@ -237,6 +238,7 @@ int main(int argc, char *argv[]) {
 		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
+		int nr_threads = atoi(argv[7]);
 		G = 100.0/(N);
 
 		FILE* file1;
@@ -286,13 +288,18 @@ int main(int argc, char *argv[]) {
 		 	quadMass(rootitoot);
 		 	centerOfMass(rootitoot);
 
+	    	#pragma omp parallel for num_threads(nr_threads)
+	    	//#pragma omp parallel
 		    for (int i = 0; i < N; ++i){
+	
+	
 				forceCal(rootitoot, starArray[i]);
+
 		    }
+
 
 		    for (int i = 0; i < N; ++i)
 		    {
-
 				starArray[i]->vel_x += starArray[i]->F_x*dt;
 				starArray[i]->vel_y += starArray[i]->F_y*dt;
 
