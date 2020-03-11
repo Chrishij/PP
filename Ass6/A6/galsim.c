@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <pthread.h>
 #include "graphics.h"
 
+// const int* N;
+// int steps;
 double dt;
 double theta_max;
 double G;
@@ -15,6 +16,7 @@ const int windowWidth=800;
 
 const float L=1;
 const float W=1;
+
 
 typedef struct star {
 	double pos_x;
@@ -40,13 +42,6 @@ typedef struct quad {
 	double center_x;
 	double center_y;
 } quad_type;
-
-typedef struct thread_data {
-	quad_type* quad;
-	star_t** array;
-	int startIndex;
-	int numOfIter;
-} thread_d;
 
 void initQuad (quad_type* quad, double x, double y, double w){
 	quad->x = x;
@@ -116,6 +111,7 @@ void centerOfMass(quad_type* quad){
 		quad->center_x = ((quad->quadOne->mass*quad->quadOne->center_x + quad->quadTwo->mass*quad->quadTwo->center_x + quad->quadThree->mass*quad->quadThree->center_x + quad->quadFour->mass*quad->quadFour->center_x)/(quad->mass));
 
 		quad->center_y = ((quad->quadOne->mass*quad->quadOne->center_y + quad->quadTwo->mass*quad->quadTwo->center_y + quad->quadThree->mass*quad->quadThree->center_y + quad->quadFour->mass*quad->quadFour->center_y)/(quad->mass));
+
 	}
 }
 
@@ -133,7 +129,6 @@ double quadMass(quad_type* quad){
 
 
 void forceCal(quad_type* quad, star_t* star){
-
 	double theta;
 
 	double distance_center_x=0;
@@ -230,21 +225,8 @@ void clearQuad(quad_type* quad){
 	quad = NULL;
 }
 
-void *forceCaller(void* threadargs){
-	struct thread_data *my_data;
-	my_data = (struct thread_data*) threadargs;
-	int startIndex = my_data->startIndex;
-	int numOfIter = my_data->numOfIter;
-
-	for (int i = startIndex; i < (startIndex+numOfIter); ++i)
-	{
-		forceCal((my_data->quad), my_data->array[i]);
-	}
-	pthread_exit(NULL); 
-}
-
 int main(int argc, char *argv[]) {
-	if (argc != 8)
+	if (argc != 7)
 	{
 		printf("Not six input arguments!\n");
 	}
@@ -255,7 +237,6 @@ int main(int argc, char *argv[]) {
 		dt = atof(argv[4]);
 		theta_max = atof(argv[5]);
 		int graphics = atoi(argv[6]);
-		int n_threads = atoi(argv[7]);
 		G = 100.0/(N);
 
 		FILE* file1;
@@ -305,48 +286,13 @@ int main(int argc, char *argv[]) {
 		 	quadMass(rootitoot);
 		 	centerOfMass(rootitoot);
 
-			pthread_t ptid[n_threads];
-			struct thread_data* threadargs[n_threads];
-
-			int stepSize = N/n_threads;
-			int lastStepSize = stepSize+(N-stepSize*n_threads);
-			printf("%d\n", lastStepSize);
-
-			for (int i = 0; i < (n_threads-1); ++i)
-			{
-				threadargs[i] = (thread_d*)malloc(sizeof(thread_d));
-				threadargs[i]->array = (star_t**) malloc(sizeof(star_t*)*(N));
-				threadargs[i]->startIndex = stepSize*i;
-				threadargs[i]->numOfIter = stepSize;
-				threadargs[i]->quad = rootitoot;
-			}
-
-			threadargs[n_threads-1] = (thread_d*)malloc(sizeof(thread_d));
-			threadargs[n_threads-1]->array = (star_t**) malloc(sizeof(star_t*)*(N));
-			threadargs[n_threads-1]->startIndex = N-lastStepSize;
-			threadargs[n_threads-1]->numOfIter = lastStepSize;
-			threadargs[n_threads-1]->quad = rootitoot;
-
-			for (int i = 0; i < N; ++i)
-			{
-				for (int j = 0; j < n_threads; ++j)
-				{
-					threadargs[j]->array[i] = starArray[i];
-				}
-			}
-
-			for (int i = 0; i < n_threads; ++i)
-			{
-				pthread_create(&ptid[i], NULL, &forceCaller, (void* ) threadargs[i]);
-			}
-
-			for (int i = 0; i < n_threads; ++i)
-			{
-				pthread_join(ptid[i], NULL); 
-			}
+		    for (int i = 0; i < N; ++i){
+				forceCal(rootitoot, starArray[i]);
+		    }
 
 		    for (int i = 0; i < N; ++i)
 		    {
+
 				starArray[i]->vel_x += starArray[i]->F_x*dt;
 				starArray[i]->vel_y += starArray[i]->F_y*dt;
 
@@ -390,5 +336,6 @@ int main(int argc, char *argv[]) {
 		{
 			free(starArray[i]);
 		}
+			
 	}
 }
