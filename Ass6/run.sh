@@ -38,7 +38,6 @@ echo "Run!"
 # cd ..
 
 cd A6
-//export OMP_NUM_THREADS=8
 make
 time ./galsim 2000 ../input_data/ellipse_N_02000.gal 200 0.00001 0.21 0 2
 #valgrind --tool=memcheck ./galsim 2000 ../input_data/ellipse_N_00500.gal 200 0.00001 0.21 0
