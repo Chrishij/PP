@@ -1,0 +1,89 @@
+real    0m10.617s
+
+real    0m5.963s
+
+
+real    0m4.127s
+
+real    0m3.295s
+
+
+real    0m3.355s
+
+
+real    0m2.515s
+
+
+real    0m2.470s
+
+
+real    0m2.640s
+
+
+real    0m2.340s
+
+real    0m1.961s
+
+
+real    0m1.873s
+
+
+real    0m1.994s
+
+
+real    0m1.734s
+
+
+real    0m1.729s
+
+
+real    0m1.743s
+
+
+real    0m1.907s
+
+
+Körnins 2
+real    0m10.608s
+
+
+real    0m5.694s
+
+
+real    0m4.049s
+
+
+real    0m3.611s
+
+
+real    0m3.399s
+
+real    0m2.665s
+
+real    0m2.282s
+
+
+real    0m2.219s
+
+
+real    0m2.106s
+
+
+real    0m3.062s
+
+
+real    0m1.995s
+
+
+real    0m1.891s
+
+
+real    0m1.859s
+
+real    0m1.919s
+
+
+real    0m1.755s
+
+
+real    0m2.008s
